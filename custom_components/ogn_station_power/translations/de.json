@@ -1,0 +1,43 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "OGN-Bodenstation",
+        "description": "Liest Spannung, Strom und Leistung einer breezedudeGS-Station aus dem APRS-Stream des Open Glider Network. Die Station muss Daten an den APRS-Server senden (\"Send data to APRS server\" aktiv).",
+        "data": {
+          "callsign": "Name der Station (wie in der Station eingestellt)",
+          "server": "APRS-Server",
+          "port": "Port"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Verbindung zum APRS-Server nicht möglich.",
+      "invalid_callsign": "Der Stationsname darf nur Buchstaben, Ziffern, \"-\" und \"_\" enthalten (max. 20 Zeichen)."
+    },
+    "abort": {
+      "already_configured": "Diese Station ist bereits eingerichtet."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Optionen",
+        "data": {
+          "timeout": "Werte als nicht verfügbar markieren nach (Minuten ohne Status)"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "voltage": { "name": "Spannung" },
+      "current": { "name": "Strom" },
+      "power": { "name": "Leistung" },
+      "energy": { "name": "Energie (positive Leistung)" },
+      "uptime": { "name": "Laufzeit" },
+      "version": { "name": "Firmware-Version" },
+      "last_update": { "name": "Letzte Aktualisierung" }
+    }
+  }
+}

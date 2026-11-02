@@ -1,0 +1,43 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "OGN ground station",
+        "description": "Reads voltage, current and power of a breezedudeGS station from the Open Glider Network APRS stream. The station must send data to the APRS server (Send data to APRS server enabled).",
+        "data": {
+          "callsign": "Station name (as set in the station)",
+          "server": "APRS server",
+          "port": "Port"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Cannot connect to the APRS server.",
+      "invalid_callsign": "The station name may only contain letters, digits, \"-\" and \"_\" (max. 20 characters)."
+    },
+    "abort": {
+      "already_configured": "This station is already configured."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Options",
+        "data": {
+          "timeout": "Mark values unavailable after (minutes without status)"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "voltage": { "name": "Voltage" },
+      "current": { "name": "Current" },
+      "power": { "name": "Power" },
+      "energy": { "name": "Energy (positive power)" },
+      "uptime": { "name": "Uptime" },
+      "version": { "name": "Firmware version" },
+      "last_update": { "name": "Last update" }
+    }
+  }
+}
