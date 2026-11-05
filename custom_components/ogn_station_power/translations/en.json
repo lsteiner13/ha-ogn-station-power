@@ -30,11 +30,14 @@
     }
   },
   "entity": {
+    "button": {
+      "reset_energy": { "name": "Reset energy" }
+    },
     "sensor": {
       "voltage": { "name": "Voltage" },
       "current": { "name": "Current" },
       "power": { "name": "Power" },
-      "energy": { "name": "Energy (positive power)" },
+      "energy": { "name": "Energy (net)" },
       "uptime": { "name": "Uptime" },
       "version": { "name": "Firmware version" },
       "last_update": { "name": "Last update" }

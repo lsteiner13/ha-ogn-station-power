@@ -38,7 +38,8 @@ Manual installation: copy `custom_components/ogn_station_power` to `config/custo
 | Voltage | V | |
 | Current | A | positive = flow from `VIN+` to `VIN-` of the INA219 (charging, if the shunt is in the charge line) |
 | Power | W | voltage × current as reported by the station |
-| Energy (positive power) | kWh | integrated from the power values, only positive power counts; can be used in the **Energy dashboard** (e.g. as solar production) |
+| Energy (net) | Wh | integrated from the power values; positive and negative power are both counted (net energy, can decrease) |
+| Reset energy (button) | – | sets the energy counter back to 0 Wh |
 | Uptime, Firmware version, Last update | – | diagnostic |
 
 Notes:

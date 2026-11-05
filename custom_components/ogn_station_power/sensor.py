@@ -77,9 +77,9 @@ ENERGY_DESCRIPTION = SensorEntityDescription(
     key="energy",
     translation_key="energy",
     device_class=SensorDeviceClass.ENERGY,
-    native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
-    state_class=SensorStateClass.TOTAL_INCREASING,
-    suggested_display_precision=3,
+    native_unit_of_measurement=UnitOfEnergy.WATT_HOUR,
+    state_class=SensorStateClass.TOTAL,
+    suggested_display_precision=2,
 )
 
 
@@ -133,9 +133,9 @@ class OgnReadingSensor(OgnBaseSensor):
 
 
 class OgnEnergySensor(OgnBaseSensor, RestoreSensor):
-    """Energie, aus den gemeldeten Leistungswerten aufsummiert.
+    """Energie in Wh, aus den gemeldeten Leistungswerten aufsummiert.
 
-    Gezählt wird nur positive Leistung (Fluss von VIN+ nach VIN-, bei Solar also die Ladung).
+    Positive und negative Leistung werden vorzeichenrichtig verrechnet (Netto-Energie).
     Die Station meldet alle 5 Minuten einen geglätteten Mittelwert. Die Summe ist daher
     eine Näherung. Bei Lücken über ENERGY_MAX_GAP_MIN Minuten (z. B. Nachtabschaltung)
     wird nichts geschätzt.
@@ -143,7 +143,7 @@ class OgnEnergySensor(OgnBaseSensor, RestoreSensor):
 
     def __init__(self, hub: OgnStationHub, entry: OgnConfigEntry, description: SensorEntityDescription) -> None:
         super().__init__(hub, entry, description)
-        self._energy_kwh = 0.0
+        self._energy_wh = 0.0
         self._last_time: datetime | None = None
         self._last_power = 0.0
 
@@ -151,9 +151,22 @@ class OgnEnergySensor(OgnBaseSensor, RestoreSensor):
         await super().async_added_to_hass()
         if (data := await self.async_get_last_sensor_data()) is not None and data.native_value is not None:
             try:
-                self._energy_kwh = float(data.native_value)
+                self._energy_wh = float(data.native_value)
+                # Migration: frühere Versionen speicherten kWh
+                if data.native_unit_of_measurement == UnitOfEnergy.KILO_WATT_HOUR:
+                    self._energy_wh *= 1000
             except (TypeError, ValueError):
-                self._energy_kwh = 0.0
+                self._energy_wh = 0.0
+
+        self.async_on_remove(
+            async_dispatcher_connect(self.hass, f"{self._hub.signal}_reset", self._handle_reset)
+        )
+
+    @callback
+    def _handle_reset(self) -> None:
+        """Setzt den Zählerstand auf 0 (Button)."""
+        self._energy_wh = 0.0
+        self.async_write_ha_state()
 
     @property
     def available(self) -> bool:
@@ -161,7 +174,7 @@ class OgnEnergySensor(OgnBaseSensor, RestoreSensor):
 
     @property
     def native_value(self) -> float:
-        return round(self._energy_kwh, 4)
+        return round(self._energy_wh, 3)
 
     @callback
     def _handle_update(self) -> None:
@@ -170,8 +183,8 @@ class OgnEnergySensor(OgnBaseSensor, RestoreSensor):
             if self._last_time is not None:
                 gap_h = (reading.time - self._last_time).total_seconds() / 3600
                 if 0 < gap_h <= ENERGY_MAX_GAP_MIN / 60:
-                    mean_w = (max(self._last_power, 0.0) + max(reading.value, 0.0)) / 2
-                    self._energy_kwh += mean_w * gap_h / 1000
+                    mean_w = (self._last_power + reading.value) / 2
+                    self._energy_wh += mean_w * gap_h
             self._last_time = reading.time
             self._last_power = reading.value
         self.async_write_ha_state()

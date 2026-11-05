@@ -7,7 +7,7 @@ from homeassistant.core import HomeAssistant
 
 from .hub import OgnStationHub
 
-PLATFORMS: list[Platform] = [Platform.SENSOR]
+PLATFORMS: list[Platform] = [Platform.SENSOR, Platform.BUTTON]
 
 type OgnConfigEntry = ConfigEntry[OgnStationHub]
 
