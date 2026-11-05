@@ -78,8 +78,9 @@ ENERGY_DESCRIPTION = SensorEntityDescription(
     translation_key="energy",
     device_class=SensorDeviceClass.ENERGY,
     native_unit_of_measurement=UnitOfEnergy.WATT_HOUR,
+    suggested_unit_of_measurement=UnitOfEnergy.WATT_HOUR,
     state_class=SensorStateClass.TOTAL,
-    suggested_display_precision=2,
+    suggested_display_precision=3,
 )
 
 
