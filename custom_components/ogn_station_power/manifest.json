@@ -1,12 +1,18 @@
 {
   "domain": "ogn_station_power",
   "name": "OGN Station Power (breezedudeGS)",
-  "codeowners": ["@lsteiner13"],
+  "categories": [
+    "energy.solar_batteries",
+    "sensors"
+  ],
+  "codeowners": [
+    "@lsteiner13"
+  ],
   "config_flow": true,
   "documentation": "https://github.com/lsteiner13/ha-ogn-station-power",
   "integration_type": "device",
   "iot_class": "cloud_push",
   "issue_tracker": "https://github.com/lsteiner13/ha-ogn-station-power/issues",
   "requirements": [],
-  "version": "0.1.0"
+  "version": "0.2.0"
 }
